@@ -1,0 +1,297 @@
+/* ---------- Fontes ---------- */
+@font-face {
+  font-family: "Garet Book";
+  src: url("../assets/fonts/Garet-Book.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Garet Heavy";
+  src: url("../assets/fonts/Garet-Heavy.ttf") format("truetype");
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* ---------- Reset básico ---------- */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+  overflow: hidden;
+}
+
+body {
+  font-family: "Garet Book", sans-serif;
+  background-color: #260033; /* fallback caso a imagem de fundo não carregue */
+}
+
+/* ---------- Transição entre páginas (slide) ----------
+   Ativa a View Transitions API pra navegação entre documentos: a página
+   atual desliza pra fora à esquerda enquanto a nova entra pela direita,
+   como se uma "empurrasse" a outra. Suportado em Chrome/Edge e Safari;
+   no Firefox a navegação continua normal, só sem o efeito. */
+@view-transition {
+  navigation: auto;
+}
+
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 0.4s;
+  animation-timing-function: ease-in-out;
+  mix-blend-mode: normal; /* evita a mistura de cor estranha do crossfade padrão */
+}
+
+::view-transition-old(root) {
+  animation-name: lineu-slide-out-left;
+}
+
+::view-transition-new(root) {
+  animation-name: lineu-slide-in-right;
+}
+
+@keyframes lineu-slide-out-left {
+  to {
+    transform: translateX(-100%);
+  }
+}
+
+@keyframes lineu-slide-in-right {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+/* ---------- Wrapper base das páginas (fundo + sem scroll) ----------
+   splash = página 1 (abertura) | menu = página 2 (menu principal)
+   mode   = página 3 (escolha de modo, dentro de "Jogar") */
+.splash,
+.menu,
+.mode {
+  position: relative;
+  height: 100vh;
+  height: 100dvh; /* evita a barra de endereço do mobile gerar scroll */
+  width: 100%;
+  overflow: hidden;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  padding-inline: 24px;
+
+  background-image: url("../assets/img/Fundo.png");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+
+  cursor: default;
+}
+
+/* Espaçadores flexíveis: mantêm a proporção vertical de cada mockup,
+   mas encolhem juntos se a tela for baixa — nunca gera scroll, só
+   reduz a "respiração" em volta do conteúdo. */
+.splash__spacer,
+.menu__spacer,
+.mode__spacer {
+  flex-shrink: 1;
+  min-height: 0;
+}
+
+.splash__spacer--top { flex: 2.65 1 0; }
+.splash__spacer--bottom { flex: 1 1 0; }
+
+
+.splash__content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex-shrink: 1;
+  min-height: 0;
+}
+
+.splash__logo {
+  width: clamp(220px, 39.27vw, 754px);
+  height: auto;
+  display: block;
+}
+
+.splash__slogan {
+  margin-top: clamp(16px, 8.06vh, 100px);
+  font-family: "Garet Book", sans-serif;
+  font-weight: 400;
+  font-size: clamp(22px, 3.0208vw, 58px);
+  color: #FF5031;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.splash__cta {
+  margin-top: clamp(24px, 16.76vh, 210px);
+  font-family: "Garet Book", sans-serif;
+  font-weight: 400;
+  font-size: clamp(15px, 1.9271vw, 37px);
+  color: #FEFEFE;
+  text-align: center;
+
+  animation: cta-pulse 2.2s ease-in-out infinite;
+}
+
+@keyframes cta-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.55; }
+}
+
+.splash__cta strong {
+  font-family: "Garet Heavy", sans-serif;
+  font-weight: 800;
+}
+
+/* ---------- Telas menores / retrato ---------- */
+@media (max-width: 640px), (max-height: 500px) {
+  .splash__slogan {
+    white-space: normal;
+    margin-top: 32px;
+  }
+
+  .splash__cta {
+    margin-top: 40px;
+  }
+}
+
+/* ---------- Menu (página 2) ---------- */
+.menu__spacer--top {
+  flex: 1.3 1 0;
+}
+
+.menu__spacer--bottom {
+  flex: 1 1 0;
+}
+
+.menu__buttons {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(16px, 3.148vh, 34px);
+  flex-shrink: 1;
+  min-height: 0;
+}
+
+/* Botão em formato de pílula, igual ao layout: preenchimento laranja,
+   contorno lilás fino. A "animação" pedida é o efeito 3D de pressionar
+   (baseado no snippet enviado), só adaptado às cores do Lineu — no
+   estado normal ele já fica idêntico à foto, o efeito aparece ao
+   interagir. */
+.btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: clamp(200px, 24.375vw, 468px);
+  aspect-ratio: 468 / 114;
+
+  font-family: "Garet Book", sans-serif;
+  font-size: clamp(24px, 3.0208vw, 58px);
+  color: #FEFEFE;
+  text-transform: uppercase;
+  text-align: center;
+  text-decoration: none; /* caso o .btn seja um <a>, como o "Jogar" */
+
+  background-color: #FF5031;
+  border: 3px solid #968DE0;
+  border-radius: 999px;
+
+  cursor: pointer;
+  transition: box-shadow 0.15s ease, translate 0.15s ease;
+
+  box-shadow:
+    inset 0 2px 0 0 rgba(255, 255, 255, 0.35),
+    0 3px 0 0 #E14C2C,
+    0 6px 0 0 #C7431F,
+    0 7px 10px 0 rgba(38, 0, 51, 0.45);
+}
+
+.btn:active {
+  translate: 0 5px;
+  box-shadow:
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.35),
+    0 1px 0 0 #E14C2C,
+    0 2px 0 0 #C7431F,
+    0 2px 4px 0 rgba(38, 0, 51, 0.45);
+}
+
+.btn:focus-visible {
+  outline: 3px solid #FEFEFE;
+  outline-offset: 3px;
+}
+
+.btn--primary {
+  font-family: "Garet Heavy", sans-serif;
+  font-size: clamp(28px, 3.3854vw, 65px);
+  letter-spacing: 0.046em;
+}
+
+/* ---------- Seleção de modo (página 3, dentro de "Jogar") ---------- */
+.mode__spacer--top { flex: 1.1 1 0; }
+.mode__spacer--bottom { flex: 1 1 0; }
+
+.mode__group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex-shrink: 1;
+  min-height: 0;
+}
+
+.mode__title {
+  margin: 0 0 clamp(24px, 5.37vh, 58px);
+  font-family: "Garet Heavy", sans-serif;
+  font-weight: 800;
+  font-size: clamp(38px, 4.479vw, 86px);
+  color: #FEFEFE;
+  text-transform: uppercase;
+  text-align: center;
+}
+
+.mode__buttons {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(16px, 3.148vh, 34px);
+}
+
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation: none !important;
+    transition: none !important;
+  }
+
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation: none !important;
+  }
+}
+
+/* Link invisível cobrindo a tela inicial inteira: clique/toque em
+   qualquer ponto já navegam nativamente (precisa ser um <a href> de
+   verdade pra "view transition" disparar — ver js/main.js). */
+.splash__link {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+}
+
+.splash__link:focus-visible {
+  outline: 3px solid #FEFEFE;
+  outline-offset: -6px;
+}
