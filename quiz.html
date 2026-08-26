@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lineu — Quiz</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <main class="quiz" id="quiz">
+
+    <!-- Tela do quiz (pergunta atual) -->
+    <section class="quiz__stage" id="quiz-stage">
+      <div class="quiz__question" id="quiz-question"></div>
+      <div class="quiz__answers" id="quiz-answers"></div>
+    </section>
+
+    <!-- Relógio + barra de tempo -->
+    <div class="quiz__timer" id="quiz-timer">
+      <img class="quiz__timer-frame" src="assets/img/moldura-tempo.png" alt="">
+      <div class="quiz__timer-track">
+        <div class="quiz__timer-fill" id="quiz-timer-fill"></div>
+      </div>
+    </div>
+
+    <!-- Botão voltar para o menu -->
+    <a href="menu.html" class="quiz__back" aria-label="Voltar para o menu">
+      <img src="assets/img/voltar-menu.png" alt="">
+    </a>
+
+    <!-- Tela de resultado (some ao final das perguntas) -->
+    <section class="quiz__results" id="quiz-results" hidden>
+      <h1 class="quiz__results-title">Resultado</h1>
+      <div class="quiz__results-list" id="quiz-results-list"></div>
+      <a href="menu.html" class="btn btn--primary">Voltar ao menu</a>
+    </section>
+
+  </main>
+
+  <script src="js/quiz.js"></script>
+</body>
+</html>

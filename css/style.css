@@ -166,6 +166,14 @@ body {
   .splash__cta {
     margin-top: 40px;
   }
+
+  .quiz__question {
+    font-size: clamp(18px, 5vw, 30px);
+  }
+
+  .quiz__answer {
+    font-size: clamp(13px, 3.6vw, 20px);
+  }
 }
 
 /* ---------- Menu (página 2) ---------- */
@@ -294,4 +302,313 @@ body {
 .splash__link:focus-visible {
   outline: 3px solid #FEFEFE;
   outline-offset: -6px;
+}
+
+/* ==================================================================
+   Quiz (página 4)
+   Referência de medidas: mockup 1920×1080 (layout 4.png / layout 4_.png)
+   ================================================================== */
+
+.quiz {
+  position: relative;
+  height: 100vh;
+  height: 100dvh;
+  width: 100%;
+  overflow: hidden;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  background-image: url("../assets/img/fundo-claro.png");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+
+  cursor: default;
+}
+
+.quiz__stage[hidden],
+.quiz__timer[hidden],
+.quiz__back[hidden] {
+  display: none;
+}
+
+/* ---------- Palco: pergunta + respostas ---------- */
+.quiz__stage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(20px, 6.5vh, 80px);
+
+  width: 100%;
+  max-width: 1583px;
+  padding-inline: clamp(12px, 1.5vw, 20px);
+  flex-shrink: 1;
+  min-height: 0;
+}
+
+/* ---------- Caixa da pergunta ----------
+   Largura fixa; altura é fluida (padding + line-height), então quando o
+   texto quebra pra 2 linhas ela cresce sozinha — sem precisar de duas
+   classes CSS diferentes pra "curta"/"longa". */
+.quiz__question {
+  width: 100%;
+  box-sizing: border-box;
+
+  background-color: #FF5031;
+  border-radius: clamp(20px, 3.49vw, 67px);
+
+  padding-block: clamp(12px, 2.03vw, 39px);
+  padding-inline: clamp(16px, 3.33vw, 64px);
+
+  font-family: "Garet Heavy", sans-serif;
+  font-weight: 800;
+  font-size: clamp(16px, 2.6vw, 50px);
+  line-height: 1.3;
+  color: #FEFEFE;
+  text-align: left;
+}
+
+/* ---------- Respostas ----------
+   Duas disposições possíveis, aplicadas via JS conforme o tamanho do
+   texto:
+   - .quiz__answers--grid   → grade 2×2 (respostas curtas)
+   - .quiz__answers--stack  → coluna única (respostas longas)
+   A ordem no HTML é sempre a,b,c,d; no modo grade, grid-auto-flow:column
+   faz a e b caírem na coluna esquerda e c,d na direita (igual ao mockup). */
+.quiz__answers {
+  --answer-height: clamp(34px, 5.26vw, 101px);
+  display: grid;
+  grid-auto-flow: column;
+  grid-template-rows: repeat(2, auto);
+  grid-auto-columns: max-content;
+  column-gap: clamp(16px, 2.55vw, 49px);
+  row-gap: clamp(8px, 1.5vh, 18px);
+  justify-content: center;
+}
+
+.quiz__answers--grid .quiz__answer {
+  max-width: 44vw;
+}
+
+.quiz__answers--stack .quiz__answer {
+  max-width: min(92vw, 1583px);
+}
+
+.quiz__answers--stack {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  row-gap: clamp(8px, 1.5vh, 18px);
+}
+
+/* ---------- Pílula de resposta ---------- */
+.quiz__answer {
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+
+  height: var(--answer-height);
+  border-radius: 999px;
+  background-color: #5A189A;
+
+  padding-left: calc(var(--answer-height) * 0.135);
+  padding-right: clamp(16px, 2.86vw, 55px);
+
+  font-family: "Garet Book", sans-serif;
+  font-size: clamp(16px, 2.29vw, 44px);
+  color: #FEFEFE;
+  white-space: nowrap;
+
+  cursor: pointer;
+  border: none;
+  text-align: left;
+
+  transition: background-color 0.2s ease;
+}
+
+.quiz__answer-letter {
+  box-sizing: border-box;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: calc(var(--answer-height) * 0.73);
+  height: calc(var(--answer-height) * 0.73);
+  margin-right: calc(var(--answer-height) * 0.24);
+
+  background-color: #FEFEFE;
+  border-radius: 50%;
+
+  font-family: "Garet Heavy", sans-serif;
+  font-weight: 800;
+  font-size: calc(var(--answer-height) * 0.42);
+  color: #FF5031;
+  text-transform: lowercase;
+}
+
+.quiz__answer:disabled {
+  cursor: default;
+}
+
+/* Feedback depois de responder (ou tempo esgotado) */
+.quiz__answer--correct {
+  background-color: #2FAE66;
+}
+
+.quiz__answer--wrong {
+  background-color: #C7431F;
+}
+
+/* ---------- Relógio + barra de tempo ---------- */
+.quiz__timer {
+  position: absolute;
+  left: 15.2083vw;
+  top: 81.76vh;
+  width: 64.9479vw;
+  aspect-ratio: 1251 / 145;
+}
+
+.quiz__timer-frame {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.quiz__timer-track {
+  position: absolute;
+  left: 13.95%;
+  top: 55.1%;
+  width: 84.2%;
+  height: 6.5%;
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.quiz__timer-fill {
+  width: 0%;
+  height: 100%;
+  border-radius: 999px;
+
+  background-image: linear-gradient(90deg, #508C8B, #78FFFC, #508C8B);
+  background-size: 200% 100%;
+  animation: quiz-timer-shimmer 1.4s linear infinite;
+}
+
+@keyframes quiz-timer-shimmer {
+  from { background-position: 0% 0; }
+  to { background-position: -200% 0; }
+}
+
+/* ---------- Botão voltar ao menu ---------- */
+.quiz__back {
+  position: absolute;
+  top: 81.94vh;
+  right: 8.75vw;
+  width: 6.04vw;
+  aspect-ratio: 1 / 1;
+
+  display: block;
+  border-radius: 50%;
+  transition: translate 0.15s ease;
+}
+
+.quiz__back img {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.quiz__back:active {
+  translate: 0 3px;
+}
+
+.quiz__back:focus-visible {
+  outline: 3px solid #5A189A;
+  outline-offset: 3px;
+}
+
+/* ---------- Tela de resultado ---------- */
+.quiz__results[hidden] {
+  display: none;
+}
+
+.quiz__results {
+  position: relative;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(20px, 4vh, 48px);
+
+  width: 100%;
+  max-width: 1200px;
+  padding-inline: clamp(16px, 4vw, 60px);
+}
+
+.quiz__results-title {
+  font-family: "Garet Heavy", sans-serif;
+  font-weight: 800;
+  font-size: clamp(32px, 4.479vw, 86px);
+  color: #5A189A;
+  text-transform: uppercase;
+  text-align: center;
+}
+
+.quiz__results-list {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(10px, 1.8vh, 22px);
+  width: 100%;
+}
+
+.quiz__result-item {
+  display: flex;
+  align-items: center;
+  gap: clamp(12px, 1.8vw, 28px);
+
+  width: 100%;
+  box-sizing: border-box;
+  border-radius: 999px;
+  padding-block: clamp(10px, 1.6vw, 26px);
+  padding-inline: clamp(18px, 2.6vw, 42px);
+
+  background-color: #5A189A;
+  color: #FEFEFE;
+  font-family: "Garet Book", sans-serif;
+  font-size: clamp(15px, 1.6vw, 28px);
+}
+
+.quiz__result-icon {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: clamp(28px, 2.2vw, 40px);
+  height: clamp(28px, 2.2vw, 40px);
+  border-radius: 50%;
+
+  font-family: "Garet Heavy", sans-serif;
+  font-size: clamp(16px, 1.3vw, 24px);
+  color: #FEFEFE;
+}
+
+.quiz__result-item--correct .quiz__result-icon {
+  background-color: #2FAE66;
+}
+
+.quiz__result-item--wrong .quiz__result-icon {
+  background-color: #C7431F;
+}
+
+.quiz__results .btn {
+  width: auto;
+  aspect-ratio: auto;
+  padding: 0.5em 1.4em;
+  white-space: nowrap;
 }
