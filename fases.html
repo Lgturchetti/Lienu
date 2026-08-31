@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lineu — Escolher fase</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <a href="jogar.html" class="voltar" aria-label="Voltar">
+    <span class="voltar__seta" aria-hidden="true">&larr;</span> Voltar
+  </a>
+
+  <main class="fases" id="fases">
+    <div class="fases__spacer fases__spacer--top" aria-hidden="true"></div>
+
+    <div class="fases__group">
+      <h1 class="fases__title">Fase:</h1>
+
+      <!-- Uma linha por nível. O estado (cadeado aberto/fechado, notas 0–3 e
+           se o botão navega ou não) é aplicado em runtime por js/fases.js a
+           partir do progresso salvo em localStorage. -->
+      <ul class="fases__lista" aria-label="Selecionar fase do modo cenário">
+        <li class="fases__item" data-nivel="1">
+          <img class="fases__cadeado" src="assets/img/cadeado-desbloqueado.png" alt="" aria-hidden="true">
+          <a class="btn fases__btn" href="cenario.html?nivel=1">Nível 1</a>
+          <img class="fases__notas" src="assets/img/nota-0.png" alt="Nenhuma nota conquistada">
+        </li>
+
+        <li class="fases__item" data-nivel="2">
+          <img class="fases__cadeado" src="assets/img/cadeado-bloqueado.png" alt="" aria-hidden="true">
+          <a class="btn fases__btn" href="cenario.html?nivel=2">Nível 2</a>
+          <img class="fases__notas" src="assets/img/nota-0.png" alt="Nenhuma nota conquistada">
+        </li>
+
+        <li class="fases__item" data-nivel="3">
+          <img class="fases__cadeado" src="assets/img/cadeado-bloqueado.png" alt="" aria-hidden="true">
+          <a class="btn fases__btn" href="cenario.html?nivel=3">Nível 3</a>
+          <img class="fases__notas" src="assets/img/nota-0.png" alt="Nenhuma nota conquistada">
+        </li>
+      </ul>
+    </div>
+
+    <div class="fases__spacer fases__spacer--bottom" aria-hidden="true"></div>
+  </main>
+
+  <script src="js/fases.js"></script>
+
+</body>
+</html>
