@@ -1,0 +1,15 @@
+# Instruções internas do Claude — não versionar
+CLAUDE.md
+
+# Sistema operacional
+.DS_Store
+Thumbs.db
+
+# Editores
+.vscode/
+.idea/
+*.swp
+*~
+
+# Logs / temporários
+*.log

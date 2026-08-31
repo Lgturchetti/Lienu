@@ -1,6 +1,6 @@
 // Lógica do Quiz — Lineu
-// Perguntas de teste: só pra validar a lógica (timer, layout curta/longa,
-// feedback certo/errado, tela de resultado). Depois entram as oficiais.
+// As perguntas ficam em js/questions.js (carregado antes deste arquivo) e
+// chegam aqui pela global window.LINEU_QUESTIONS.
 (function () {
   "use strict";
 
@@ -8,34 +8,16 @@
   const FEEDBACK_DELAY_MS = 1500; // tempo mostrando acerto/erro antes de avançar
   const GRID_MAX_WIDTH_PX_AT_1920 = 660; // acima disso, vira layout "longa" (1 coluna)
 
-  const QUESTIONS = [
-    {
-      question: "Qual o tamanho mínimo da planta de um banheiro?",
-      answers: [
-        "2,10 de largura X 1,90 de profundidade",
-        "1,50 de largura X 1,70 de profundidade",
-        "1,60 de largura X 1,90 de profundidade",
-        "1,70 de largura X 2,10 de profundidade",
-      ],
-      correct: 0,
-    },
-    {
-      question:
-        "Qual a medida mínima entre o final do vaso sanitário e a porta do banheiro (fechada)?",
-      answers: [
-        "85 cm de distância",
-        "70 cm de distância",
-        "65 cm de distância",
-        "60 cm de distância",
-      ],
-      correct: 1,
-    },
-    {
-      question: "Qual a altura recomendada para instalação do vaso sanitário?",
-      answers: ["40 cm", "43 cm", "46 cm", "50 cm"],
-      correct: 1,
-    },
-  ];
+  const QUESTIONS = Array.isArray(window.LINEU_QUESTIONS)
+    ? window.LINEU_QUESTIONS
+    : [];
+
+  if (QUESTIONS.length === 0) {
+    console.error(
+      "Nenhuma pergunta encontrada. Verifique se js/questions.js foi carregado antes de js/quiz.js."
+    );
+    return;
+  }
 
   const stageEl = document.getElementById("quiz-stage");
   const questionEl = document.getElementById("quiz-question");
