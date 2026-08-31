@@ -13,13 +13,56 @@
 
     <nav class="menu__buttons" aria-label="Menu principal">
       <a href="jogar.html" class="btn btn--primary">Jogar</a>
-      <button type="button" class="btn">Regras</button>
-      <button type="button" class="btn">Sair</button>
-      <button type="button" class="btn">Sobre</button>
+      <button type="button" class="btn" id="btn-regras">Regras</button>
+      <a href="index.html" class="btn">Sair</a>
+      <button type="button" class="btn" id="btn-sobre">Sobre</button>
     </nav>
 
     <div class="menu__spacer menu__spacer--bottom" aria-hidden="true"></div>
   </main>
+
+  <!-- Pop-up das regras: abre pelo botão "Regras", fecha no X, clicando
+       fora da caixa ou apertando Esc (ver js/menu.js). -->
+  <div class="regras" id="regras" hidden>
+    <div class="regras__caixa" role="dialog" aria-modal="true" aria-labelledby="regras-titulo">
+      <button type="button" class="regras__fechar" id="regras-fechar" aria-label="Fechar">&times;</button>
+
+      <h1 class="regras__titulo" id="regras-titulo">Regras</h1>
+
+      <ul class="regras__lista">
+        <li>O objetivo é acertar o máximo de perguntas sobre normas de arquitetura e projeto.</li>
+        <li>Por enquanto só o modo <strong>Quiz</strong> está disponível.</li>
+        <li>Cada rodada tem <strong>8 perguntas</strong> sorteadas do banco — a seleção muda a cada partida.</li>
+        <li>Toda pergunta tem <strong>4 alternativas</strong> (a, b, c, d), e a ordem delas também é embaralhada a cada partida.</li>
+        <li>Você tem <strong>45 segundos</strong> para responder cada pergunta; a barra embaixo mostra o tempo acabando.</li>
+        <li>Clique numa alternativa para responder. A correta fica <strong>verde</strong>; se você errar, a sua fica <strong>vermelha</strong> e a certa aparece em verde.</li>
+        <li>Não dá para trocar a resposta depois de escolher.</li>
+        <li>Se o tempo acabar, a pergunta conta como <strong>erro</strong> e o jogo avança sozinho.</li>
+        <li>No fim aparece o resultado com o acerto ou erro de cada pergunta.</li>
+        <li>O botão no canto sai do quiz e volta para o menu a qualquer momento.</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Pop-up "Sobre": mesmo estilo do pop-up das regras (bloco .regras),
+       abre pelo botão "Sobre" e fecha do mesmo jeito (ver js/menu.js). -->
+  <div class="regras" id="sobre" hidden>
+    <div class="regras__caixa" role="dialog" aria-modal="true" aria-labelledby="sobre-titulo">
+      <button type="button" class="regras__fechar" id="sobre-fechar" aria-label="Fechar">&times;</button>
+
+      <h1 class="regras__titulo" id="sobre-titulo">Sobre</h1>
+
+      <p class="regras__texto"><strong>Lineu</strong> — jogue com quem segue as normas!</p>
+
+      <p class="regras__texto">Projetar não é só desenhar: cada medida, cada corredor, cada rampa e cada ambiente segue normas técnicas que garantem conforto, segurança e acessibilidade. É esse conhecimento que costuma ficar preso na teoria.</p>
+
+      <p class="regras__texto">O <strong>Lineu</strong> transforma essas normas de arquitetura e projeto em desafio. Você responde perguntas sobre dimensionamentos, medidas mínimas e boas práticas previstas em norma e recebe feedback na hora, aprendendo com o acerto e com o erro.</p>
+
+      <p class="regras__texto">A ideia é treinar o olhar de quem projeta — estudantes, profissionais e curiosos — de um jeito rápido e sem peso, uma pergunta de cada vez.</p>
+    </div>
+  </div>
+
+  <script src="js/menu.js"></script>
 
 </body>
 </html>
