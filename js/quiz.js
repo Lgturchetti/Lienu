@@ -7,17 +7,22 @@
   const QUESTION_TIME_MS = 45000; // 45s por pergunta
   const FEEDBACK_DELAY_MS = 1500; // tempo mostrando acerto/erro antes de avançar
   const GRID_MAX_WIDTH_PX_AT_1920 = 660; // acima disso, vira layout "longa" (1 coluna)
+  const QUESTION_COUNT = 8; // quantas perguntas são sorteadas por rodada
 
-  const QUESTIONS = Array.isArray(window.LINEU_QUESTIONS)
+  const ALL_QUESTIONS = Array.isArray(window.LINEU_QUESTIONS)
     ? window.LINEU_QUESTIONS
     : [];
 
-  if (QUESTIONS.length === 0) {
+  if (ALL_QUESTIONS.length === 0) {
     console.error(
       "Nenhuma pergunta encontrada. Verifique se js/questions.js foi carregado antes de js/quiz.js."
     );
     return;
   }
+
+  // Sorteia QUESTION_COUNT perguntas do banco a cada rodada (ou todas, se o
+  // banco tiver menos que isso). shuffle() é declaração de função, já hoisted.
+  const QUESTIONS = shuffle(ALL_QUESTIONS).slice(0, QUESTION_COUNT);
 
   const stageEl = document.getElementById("quiz-stage");
   const questionEl = document.getElementById("quiz-question");
