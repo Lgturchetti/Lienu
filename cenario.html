@@ -210,7 +210,168 @@
 
   </main>
 
-  <!-- ================= Placeholder (Nível 3) ================= -->
+  <!-- ================= Fase 3 do modo Cenário =================
+       Só aparece com ?nivel=3 (js/cenario.js). Banheiro público em L, com
+       3 boxes em cima e uma área comum embaixo. Mesmo princípio das fases
+       1 e 2: arrastar as 11 peças da bandeja para dentro da planta, girar
+       com R / botão ⟳ e, nas portas, alternar "abre p/ dentro / p/ fora"
+       no botão ⇄. As peças começam numa rotação aleatória.
+       Resposta certa (NBR 9050): o box maior (esquerda) é o acessível —
+       vaso deslocado (área de transferência livre ao lado), barra no fundo
+       + barra em L na lateral, lavatório acessível dentro do box e porta
+       ABRINDO PARA FORA; os dois boxes comuns podem abrir para dentro; os
+       2 lavatórios comuns ficam na parede da área comum. -->
+  <main class="fase3" id="fase3" hidden>
+
+    <p class="fase3__desafio">
+      <strong>Desafio:</strong> monte um banheiro público com um box acessível.
+      Encaixe cada peça no lugar certo, gire com <kbd>R</kbd> (ou o botão
+      &#8635;) e escolha, em cada porta, se ela abre para dentro ou para fora
+      (botão &#8646;).
+    </p>
+
+    <div class="fase3__tabuleiro" id="fase3-tabuleiro">
+      <img class="fase3__planta" src="assets/img/f3-planta.png"
+           alt="Planta baixa de um banheiro público em formato de L" draggable="false">
+      <!-- As zonas de encaixe (.fase3__zona) são criadas por js/cenario.js. -->
+    </div>
+
+    <div class="fase3__bandeja" id="fase3-bandeja" aria-label="Peças para encaixar">
+      <div class="fase3__slot">
+        <div class="fase3__peca fase3__peca--vaso" data-peca="vaso" data-rot="0"
+             tabindex="0" role="button" aria-label="Vaso sanitário">
+          <img src="assets/img/f3-vaso.png" alt="" draggable="false">
+        </div>
+      </div>
+      <div class="fase3__slot">
+        <div class="fase3__peca fase3__peca--vaso" data-peca="vaso" data-rot="0"
+             tabindex="0" role="button" aria-label="Vaso sanitário">
+          <img src="assets/img/f3-vaso.png" alt="" draggable="false">
+        </div>
+      </div>
+      <div class="fase3__slot">
+        <div class="fase3__peca fase3__peca--vaso" data-peca="vaso" data-rot="0"
+             tabindex="0" role="button" aria-label="Vaso sanitário">
+          <img src="assets/img/f3-vaso.png" alt="" draggable="false">
+        </div>
+      </div>
+      <div class="fase3__slot">
+        <div class="fase3__peca fase3__peca--pia-acessivel" data-peca="pia-acessivel" data-rot="0"
+             tabindex="0" role="button" aria-label="Lavatório acessível">
+          <img src="assets/img/f3-pia-acessivel.png" alt="" draggable="false">
+        </div>
+      </div>
+      <div class="fase3__slot">
+        <div class="fase3__peca fase3__peca--pia" data-peca="pia" data-rot="0"
+             tabindex="0" role="button" aria-label="Lavatório comum">
+          <img src="assets/img/f3-pia.png" alt="" draggable="false">
+        </div>
+      </div>
+      <div class="fase3__slot">
+        <div class="fase3__peca fase3__peca--pia" data-peca="pia" data-rot="0"
+             tabindex="0" role="button" aria-label="Lavatório comum">
+          <img src="assets/img/f3-pia.png" alt="" draggable="false">
+        </div>
+      </div>
+      <div class="fase3__slot">
+        <div class="fase3__peca fase3__peca--barra-fundo" data-peca="barra-fundo" data-rot="0"
+             tabindex="0" role="button" aria-label="Barra de apoio do fundo">
+          <img src="assets/img/f3-barra-fundo.png" alt="" draggable="false">
+        </div>
+      </div>
+      <div class="fase3__slot">
+        <div class="fase3__peca fase3__peca--barra-lateral" data-peca="barra-lateral" data-rot="0"
+             tabindex="0" role="button" aria-label="Barra de apoio lateral em L">
+          <img src="assets/img/f3-barra-lateral.png" alt="" draggable="false">
+        </div>
+      </div>
+      <div class="fase3__slot">
+        <div class="fase3__peca fase3__peca--porta" data-peca="porta" data-abertura="dentro" data-rot="0"
+             tabindex="0" role="button" aria-label="Porta de box">
+          <img src="assets/img/f3-porta-dentro.png" alt="" draggable="false">
+        </div>
+      </div>
+      <div class="fase3__slot">
+        <div class="fase3__peca fase3__peca--porta" data-peca="porta" data-abertura="dentro" data-rot="0"
+             tabindex="0" role="button" aria-label="Porta de box">
+          <img src="assets/img/f3-porta-dentro.png" alt="" draggable="false">
+        </div>
+      </div>
+      <div class="fase3__slot">
+        <div class="fase3__peca fase3__peca--porta" data-peca="porta" data-abertura="dentro" data-rot="0"
+             tabindex="0" role="button" aria-label="Porta de box">
+          <img src="assets/img/f3-porta-dentro.png" alt="" draggable="false">
+        </div>
+      </div>
+    </div>
+
+    <div class="fase3__acoes">
+      <button type="button" class="fase3__girar" id="fase3-girar"
+              aria-label="Girar a peça selecionada" disabled>
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M5 12a7 7 0 1 1 2.1 5" fill="none" stroke="#FFFFFF" stroke-width="2.6"
+                stroke-linecap="round"/>
+          <path d="M4 19.5v-5h5" fill="none" stroke="#FFFFFF" stroke-width="2.6"
+                stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+
+      <button type="button" class="fase3__abertura" id="fase3-abertura"
+              aria-label="Alternar abertura da porta (para dentro / para fora)" disabled>
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M9 7L4 12l5 5M15 7l5 5-5 5" fill="none" stroke="#FFFFFF" stroke-width="2.6"
+                stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M4 12h16" fill="none" stroke="#FFFFFF" stroke-width="2.6" stroke-linecap="round"/>
+        </svg>
+      </button>
+
+      <button type="button" class="fase3__confirmar" id="fase3-confirmar" aria-label="Confirmar montagem">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M20 6L9 17l-5-5" fill="none" stroke="#FFFFFF" stroke-width="3.4"
+                stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+    </div>
+
+    <a href="fases.html" class="fase3__menu" aria-label="Voltar para a escolha de fases">
+      <img src="assets/img/menu-lista.png" alt="" draggable="false">
+    </a>
+
+    <div class="fase3__tempo" aria-hidden="true">
+      <svg class="fase3__relogio" viewBox="0 0 64 66">
+        <circle cx="15" cy="13" r="8" fill="#6A3FB0"/>
+        <circle cx="49" cy="13" r="8" fill="#6A3FB0"/>
+        <rect x="29" y="2" width="6" height="8" rx="3" fill="#6A3FB0"/>
+        <circle cx="32" cy="37" r="23" fill="#8A63D2" stroke="#4B1E86" stroke-width="3"/>
+        <circle cx="32" cy="37" r="16" fill="#D3C1F0"/>
+        <line x1="32" y1="37" x2="32" y2="25" stroke="#3A1568" stroke-width="3" stroke-linecap="round"/>
+        <line x1="32" y1="37" x2="41" y2="41" stroke="#3A1568" stroke-width="3" stroke-linecap="round"/>
+        <circle cx="32" cy="37" r="2.6" fill="#3A1568"/>
+        <line x1="16" y1="57" x2="10" y2="64" stroke="#6A3FB0" stroke-width="5" stroke-linecap="round"/>
+        <line x1="48" y1="57" x2="54" y2="64" stroke="#6A3FB0" stroke-width="5" stroke-linecap="round"/>
+      </svg>
+      <div class="fase3__tempo-trilha">
+        <div class="fase3__tempo-fill" id="fase3-tempo-fill"></div>
+      </div>
+    </div>
+
+    <p class="fase3__aviso" id="fase3-aviso" role="status" hidden></p>
+
+    <div class="regras" id="fase3-overlay" hidden>
+      <div class="regras__caixa" role="dialog" aria-modal="true" aria-labelledby="fase3-overlay-titulo">
+        <h1 class="regras__titulo" id="fase3-overlay-titulo">Compreenda as normas</h1>
+        <p class="regras__texto" id="fase3-overlay-texto"></p>
+        <p class="regras__texto fase3__overlay-notas" id="fase3-overlay-notas" hidden></p>
+        <div class="fase3__overlay-acoes">
+          <button type="button" class="btn" id="fase3-rejogar">Jogar de novo</button>
+          <a href="fases.html" class="btn btn--primary">Voltar às fases</a>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- ================= Placeholder (fallback) ================= -->
   <main class="cenario" id="cenario-placeholder" hidden>
     <a href="fases.html" class="voltar" aria-label="Voltar">
       <span class="voltar__seta" aria-hidden="true">&larr;</span> Voltar
