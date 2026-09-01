@@ -401,11 +401,58 @@ body {
   display: block;
 }
 
+/* Notas do nível: anel de progresso desenhado em SVG. O arco (verde-claro)
+   cobre N/3 da volta, começando do topo e girando no sentido horário; o
+   trilho escuro fica sempre visível. O preenchimento e o texto "N/3" são
+   aplicados por js/fases.js. */
 .fases__notas {
   justify-self: start;
-  width: clamp(96px, 11vw, 212px);
-  aspect-ratio: 234 / 78;
+  width: clamp(64px, 7vw, 132px);
+  aspect-ratio: 1 / 1;
   display: block;
+  overflow: visible;
+}
+
+.fases__notas-borda {
+  fill: none;
+  stroke: #10240c;
+  stroke-width: 2.5;
+}
+
+.fases__notas-borda--interna {
+  stroke-width: 2;
+}
+
+.fases__notas-trilho {
+  fill: none;
+  stroke: #3f5f3b;
+  stroke-width: 12;
+}
+
+.fases__notas-arco {
+  fill: none;
+  stroke: #8fd838;
+  stroke-width: 12;
+  stroke-linecap: round;
+  stroke-dasharray: 0 100;
+  transform: rotate(-90deg);
+  transform-origin: 50% 50%;
+  transition: stroke-dasharray 0.5s ease;
+}
+
+.fases__notas[data-nota="0"] .fases__notas-arco {
+  display: none;
+}
+
+.fases__notas-texto {
+  font-family: "Garet Heavy", sans-serif;
+  font-weight: 800;
+  font-size: 25px;
+  fill: #b7ec7a;
+  stroke: #5fa83c;
+  stroke-width: 1;
+  paint-order: stroke;
+  letter-spacing: 0.5px;
 }
 
 /* O botão do nível reaproveita o .btn (pílula laranja); só ajusto a
@@ -1844,7 +1891,7 @@ body {
   }
 
   .fases__notas {
-    width: clamp(72px, 20vw, 120px);
+    width: clamp(56px, 15vw, 96px);
   }
 
   .fases__btn {

@@ -34,11 +34,24 @@
         ? "assets/img/cadeado-desbloqueado.png"
         : "assets/img/cadeado-bloqueado.png";
 
-      notas.src = "assets/img/nota-" + qtdNotas + ".png";
-      notas.alt =
+      // Anel de progresso: arco preenchido em N/MAX_NOTAS da volta (exato,
+      // começando do topo, sentido horário) + texto "N/3" no centro.
+      var arco = notas.querySelector(".fases__notas-arco");
+      var texto = notas.querySelector(".fases__notas-texto");
+      var fracao = (qtdNotas / MAX_NOTAS) * 100;
+
+      notas.setAttribute("data-nota", qtdNotas);
+      if (arco) {
+        arco.style.strokeDasharray =
+          qtdNotas > 0 ? fracao + " 100" : "0 100";
+      }
+      if (texto) texto.textContent = qtdNotas + "/" + MAX_NOTAS;
+      notas.setAttribute(
+        "aria-label",
         qtdNotas === 0
           ? "Nenhuma nota conquistada"
-          : qtdNotas + " de " + MAX_NOTAS + " notas conquistadas";
+          : qtdNotas + " de " + MAX_NOTAS + " notas conquistadas"
+      );
 
       if (liberado) {
         botao.setAttribute("href", "cenario.html?nivel=" + nivel);
