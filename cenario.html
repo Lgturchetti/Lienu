@@ -101,7 +101,116 @@
 
   </main>
 
-  <!-- ================= Placeholder (Nível 2 e 3) ================= -->
+  <!-- ================= Fase 2 do modo Cenário =================
+       Só aparece com ?nivel=2 (js/cenario.js). Mesmo princípio da Fase 1:
+       arrastar as peças da bandeja para dentro da planta baixa de um
+       banheiro acessível (1,5 x 1,7 m). Aqui há uma planta só, com zonas
+       de encaixe fixas, e as peças precisam ser GIRADAS (clique seleciona,
+       tecla R ou o botão ⟳ giram no sentido horário) até encostarem na
+       parede certa. Resposta certa (NBR 9050): vaso encostado na parede do
+       fundo e deslocado para um lado (área de transferência livre ao lado);
+       barra horizontal na parede do fundo, atrás do vaso; barra vertical na
+       parede lateral vizinha; lavatório afastado do vaso, perto da porta. -->
+  <main class="fase2" id="fase2" hidden>
+
+    <p class="fase2__desafio">
+      <strong>Desafio:</strong> monte um banheiro acessível de 1,5 &times; 1,7 m.
+      Encaixe o vaso, o lavatório e as duas barras de apoio nos lugares certos
+      e gire cada peça (tecla <kbd>R</kbd> ou o botão &#8635;) até ela encostar
+      na parede. A porta já abre para fora.
+    </p>
+
+    <div class="fase2__tabuleiro" id="fase2-tabuleiro">
+      <img class="fase2__planta" src="assets/img/planta-banheiro.png"
+           alt="Planta baixa de um banheiro de 1,5 por 1,7 metros" draggable="false">
+      <!-- As zonas de encaixe (.fase2__zona) são criadas por js/cenario.js. -->
+    </div>
+
+    <div class="fase2__bandeja" id="fase2-bandeja" aria-label="Peças para encaixar">
+      <div class="fase2__slot">
+        <div class="fase2__peca fase2__peca--vaso" data-peca="vaso" data-rot="0"
+             tabindex="0" role="button" aria-label="Vaso sanitário">
+          <img src="assets/img/sanitario.png" alt="" draggable="false">
+        </div>
+      </div>
+      <div class="fase2__slot">
+        <div class="fase2__peca fase2__peca--pia" data-peca="pia" data-rot="0"
+             tabindex="0" role="button" aria-label="Lavatório">
+          <img src="assets/img/pia.png" alt="" draggable="false">
+        </div>
+      </div>
+      <div class="fase2__slot">
+        <div class="fase2__peca fase2__peca--barra-h" data-peca="barra-h" data-rot="0"
+             tabindex="0" role="button" aria-label="Barra de apoio horizontal">
+          <img src="assets/img/barra-horizontal.png" alt="" draggable="false">
+        </div>
+      </div>
+      <div class="fase2__slot">
+        <div class="fase2__peca fase2__peca--barra-v" data-peca="barra-v" data-rot="0"
+             tabindex="0" role="button" aria-label="Barra de apoio vertical">
+          <img src="assets/img/barra-vertical.png" alt="" draggable="false">
+        </div>
+      </div>
+    </div>
+
+    <button type="button" class="fase2__girar" id="fase2-girar"
+            aria-label="Girar a peça selecionada" disabled>
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M5 12a7 7 0 1 1 2.1 5" fill="none" stroke="#FFFFFF" stroke-width="2.6"
+              stroke-linecap="round"/>
+        <path d="M4 19.5v-5h5" fill="none" stroke="#FFFFFF" stroke-width="2.6"
+              stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+
+    <button type="button" class="fase2__confirmar" id="fase2-confirmar" aria-label="Confirmar montagem">
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M20 6L9 17l-5-5" fill="none" stroke="#FFFFFF" stroke-width="3.4"
+              stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+
+    <a href="fases.html" class="fase2__menu" aria-label="Voltar para a escolha de fases">
+      <img src="assets/img/menu-lista.png" alt="" draggable="false">
+    </a>
+
+    <div class="fase2__tempo" aria-hidden="true">
+      <svg class="fase2__relogio" viewBox="0 0 64 66">
+        <circle cx="15" cy="13" r="8" fill="#6A3FB0"/>
+        <circle cx="49" cy="13" r="8" fill="#6A3FB0"/>
+        <rect x="29" y="2" width="6" height="8" rx="3" fill="#6A3FB0"/>
+        <circle cx="32" cy="37" r="23" fill="#8A63D2" stroke="#4B1E86" stroke-width="3"/>
+        <circle cx="32" cy="37" r="16" fill="#D3C1F0"/>
+        <line x1="32" y1="37" x2="32" y2="25" stroke="#3A1568" stroke-width="3" stroke-linecap="round"/>
+        <line x1="32" y1="37" x2="41" y2="41" stroke="#3A1568" stroke-width="3" stroke-linecap="round"/>
+        <circle cx="32" cy="37" r="2.6" fill="#3A1568"/>
+        <line x1="16" y1="57" x2="10" y2="64" stroke="#6A3FB0" stroke-width="5" stroke-linecap="round"/>
+        <line x1="48" y1="57" x2="54" y2="64" stroke="#6A3FB0" stroke-width="5" stroke-linecap="round"/>
+      </svg>
+      <div class="fase2__tempo-trilha">
+        <div class="fase2__tempo-fill" id="fase2-tempo-fill"></div>
+      </div>
+    </div>
+
+    <p class="fase2__aviso" id="fase2-aviso" role="status" hidden></p>
+
+    <!-- Overlay de fim de fase: sucesso (mostra a norma) ou tempo esgotado.
+         Reaproveita o visual dos pop-ups do menu (.regras / .regras__caixa). -->
+    <div class="regras" id="fase2-overlay" hidden>
+      <div class="regras__caixa" role="dialog" aria-modal="true" aria-labelledby="fase2-overlay-titulo">
+        <h1 class="regras__titulo" id="fase2-overlay-titulo">Compreenda as normas</h1>
+        <p class="regras__texto" id="fase2-overlay-texto"></p>
+        <p class="regras__texto fase2__overlay-notas" id="fase2-overlay-notas" hidden></p>
+        <div class="fase2__overlay-acoes">
+          <button type="button" class="btn" id="fase2-rejogar">Jogar de novo</button>
+          <a href="fases.html" class="btn btn--primary">Voltar às fases</a>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- ================= Placeholder (Nível 3) ================= -->
   <main class="cenario" id="cenario-placeholder" hidden>
     <a href="fases.html" class="voltar" aria-label="Voltar">
       <span class="voltar__seta" aria-hidden="true">&larr;</span> Voltar

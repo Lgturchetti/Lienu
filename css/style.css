@@ -898,6 +898,485 @@ body {
 }
 
 
+/* ==================================================================
+   Cenário — Fase 2 (banheiro acessível)
+   Referência de medidas: mockups 1920×1080 (layout 0 / layout_1).
+   Uma planta só, com zonas de encaixe fixas. Arrastar da bandeja o vaso,
+   o lavatório e as 2 barras; girar cada peça (clique seleciona, R / botão
+   ⟳ giram) até encostar na parede certa.
+   ================================================================== */
+.fase2 {
+  position: relative;
+  height: 100vh;
+  height: 100dvh;
+  width: 100%;
+  overflow: hidden;
+
+  background-image: url("../assets/img/fundo-padrao.png");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+
+  font-family: "Garet Book", sans-serif;
+  cursor: default;
+}
+
+.fase2[hidden] {
+  display: none;
+}
+
+/* ---------- Enunciado (canto esquerdo) ---------- */
+.fase2__desafio {
+  position: absolute;
+  left: clamp(16px, 3.4vw, 64px);
+  top: 50%;
+  transform: translateY(-50%);
+  max-width: min(24vw, 360px);
+
+  font-size: clamp(12px, 1.4vw, 27px);
+  line-height: 1.4;
+  color: #FEFEFE;
+}
+
+.fase2__desafio strong {
+  display: block;
+  margin-bottom: 0.35em;
+  font-family: "Garet Heavy", sans-serif;
+  font-weight: 800;
+  color: #FF5031;
+  text-transform: uppercase;
+  font-size: 1.12em;
+}
+
+.fase2__desafio kbd {
+  font-family: inherit;
+  font-size: 0.92em;
+  background-color: rgba(255, 255, 255, 0.16);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  border-radius: 5px;
+  padding: 0 0.35em;
+}
+
+/* ---------- A planta (tabuleiro) ---------- */
+.fase2__tabuleiro {
+  position: absolute;
+  left: 50%;
+  top: 49%;
+  transform: translate(-50%, -50%);
+  width: clamp(224px, 30vw, 580px);
+  touch-action: none;
+}
+
+.fase2__planta {
+  display: block;
+  width: 100%;
+  height: auto;
+  user-select: none;
+  -webkit-user-drag: none;
+  pointer-events: none;
+}
+
+/* ---------- Zonas de encaixe (marcadores) ----------
+   Ficam discretas; acendem enquanto se arrasta uma peça e a mais próxima
+   do ponteiro fica destacada. Não capturam ponteiro (o js usa
+   elementFromPoint no tabuleiro e calcula a zona mais próxima). */
+.fase2__zona {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  width: clamp(26px, 3.2vw, 58px);
+  height: clamp(26px, 3.2vw, 58px);
+  border: 2px dashed rgba(255, 255, 255, 0.55);
+  border-radius: 50%;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.15s ease, background-color 0.15s ease, border-color 0.15s ease;
+}
+
+.fase2__tabuleiro.is-arrastando .fase2__zona {
+  opacity: 0.55;
+}
+
+.fase2__zona.is-alvo {
+  opacity: 1;
+  border-color: #FFD166;
+  background-color: rgba(255, 209, 102, 0.2);
+}
+
+/* ---------- Bandeja (peças à direita) ---------- */
+.fase2__bandeja {
+  position: absolute;
+  right: clamp(8px, 4.4vw, 108px);
+  top: 45%;
+  transform: translateY(-50%);
+
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: center;
+  justify-items: center;
+  gap: clamp(14px, 3vh, 40px) clamp(16px, 3vw, 56px);
+  width: clamp(150px, 26vw, 350px);
+}
+
+.fase2__slot {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: clamp(72px, 14vh, 138px);
+}
+
+/* ---------- Peças arrastáveis ---------- */
+.fase2__peca {
+  position: relative;
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+  z-index: 4;
+}
+
+.fase2__peca img {
+  display: block;
+  width: 100%;
+  height: auto;
+  -webkit-user-drag: none;
+  user-select: none;
+  pointer-events: none;
+}
+
+.fase2__peca--vaso    { width: clamp(42px, 4.8vw, 92px); }
+.fase2__peca--pia     { width: clamp(48px, 5.4vw, 104px); }
+.fase2__peca--barra-h { width: clamp(78px, 9.6vw, 186px); }
+.fase2__peca--barra-v { width: clamp(12px, 1.5vw, 28px); }
+
+.fase2__peca:focus-visible,
+.fase2__peca.is-selecionada {
+  outline: 3px dashed #FFD166;
+  outline-offset: 4px;
+}
+
+.fase2__peca.is-arrastando {
+  cursor: grabbing;
+  z-index: 999;
+  filter: drop-shadow(0 10px 16px rgba(0, 0, 0, 0.45));
+}
+
+/* Peça encaixada: posicionada em % relativo ao tabuleiro (left/top vêm
+   inline do js, a partir da zona). A rotação fica em style.rotate. */
+.fase2__tabuleiro .fase2__peca.is-colocada {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  z-index: 3;
+}
+
+.fase2__tabuleiro .fase2__peca--vaso.is-colocada    { width: 27%; }
+.fase2__tabuleiro .fase2__peca--pia.is-colocada     { width: 32%; }
+.fase2__tabuleiro .fase2__peca--barra-h.is-colocada { width: 46%; }
+.fase2__tabuleiro .fase2__peca--barra-v.is-colocada { width: 6.5%; }
+
+.fase2__tabuleiro .fase2__peca.is-errada {
+  filter:
+    drop-shadow(0 0 4px #FF3B2F) drop-shadow(0 0 8px #FF3B2F)
+    drop-shadow(0 0 14px rgba(255, 59, 47, 0.8));
+}
+
+/* ---------- Botão girar (⟳) ----------
+   Fica à esquerda do botão confirmar, no mesmo nível. */
+.fase2__girar {
+  position: absolute;
+  right: clamp(78px, 13.5vw, 258px);
+  bottom: clamp(84px, 17.5vh, 200px);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: clamp(44px, 5.2vw, 100px);
+  height: clamp(44px, 5.2vw, 100px);
+  padding: 0;
+
+  background-color: #6A3FB0;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  z-index: 5;
+
+  box-shadow:
+    inset 0 3px 0 0 rgba(255, 255, 255, 0.3),
+    6px 6px 0 0 rgba(150, 120, 210, 0.5),
+    0 6px 14px 0 rgba(38, 0, 51, 0.45);
+  transition: translate 0.12s ease, box-shadow 0.12s ease, opacity 0.12s ease;
+}
+
+.fase2__girar svg {
+  display: block;
+  width: 58%;
+  height: 58%;
+}
+
+.fase2__girar:hover { background-color: #5C33A0; }
+
+.fase2__girar:active {
+  translate: 3px 3px;
+  box-shadow:
+    inset 0 2px 0 0 rgba(255, 255, 255, 0.3),
+    2px 2px 0 0 rgba(150, 120, 210, 0.5),
+    0 3px 7px 0 rgba(38, 0, 51, 0.45);
+}
+
+.fase2__girar[disabled] {
+  opacity: 0.4;
+  cursor: default;
+  pointer-events: none;
+}
+
+.fase2__girar:focus-visible {
+  outline: 3px solid #FEFEFE;
+  outline-offset: 3px;
+}
+
+/* ---------- Botão confirmar (✓) ---------- */
+.fase2__confirmar {
+  position: absolute;
+  right: clamp(14px, 5.4vw, 104px);
+  bottom: clamp(84px, 17.5vh, 200px);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: clamp(52px, 6.4vw, 122px);
+  height: clamp(52px, 6.4vw, 122px);
+  padding: 0;
+
+  background-color: #1FA6E8;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  z-index: 5;
+
+  box-shadow:
+    inset 0 3px 0 0 rgba(255, 255, 255, 0.35),
+    6px 6px 0 0 rgba(150, 200, 240, 0.55),
+    0 6px 14px 0 rgba(38, 0, 51, 0.45);
+  transition: translate 0.12s ease, box-shadow 0.12s ease;
+}
+
+.fase2__confirmar svg {
+  display: block;
+  width: 56%;
+  height: 56%;
+}
+
+.fase2__confirmar:hover { background-color: #159AD9; }
+
+.fase2__confirmar:active {
+  translate: 3px 3px;
+  box-shadow:
+    inset 0 2px 0 0 rgba(255, 255, 255, 0.35),
+    2px 2px 0 0 rgba(150, 200, 240, 0.55),
+    0 3px 7px 0 rgba(38, 0, 51, 0.45);
+}
+
+.fase2__confirmar:focus-visible {
+  outline: 3px solid #FEFEFE;
+  outline-offset: 3px;
+}
+
+/* ---------- Botão menu (volta às fases) ---------- */
+.fase2__menu {
+  position: absolute;
+  right: clamp(16px, 5.8vw, 112px);
+  bottom: clamp(18px, 4.6vh, 56px);
+
+  width: clamp(40px, 4.9vw, 94px);
+  display: block;
+  border-radius: 50%;
+  z-index: 5;
+  transition: translate 0.12s ease;
+}
+
+.fase2__menu img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.fase2__menu:active { translate: 0 3px; }
+
+.fase2__menu:focus-visible {
+  outline: 3px solid #FEFEFE;
+  outline-offset: 3px;
+}
+
+/* ---------- Cronômetro ---------- */
+.fase2__tempo {
+  position: absolute;
+  left: clamp(64px, 17vw, 328px);
+  right: clamp(190px, 32vw, 610px);
+  bottom: clamp(16px, 4.6vh, 56px);
+  height: clamp(12px, 1.9vh, 24px);
+}
+
+.fase2__relogio {
+  position: absolute;
+  right: calc(100% + clamp(6px, 0.8vw, 16px));
+  bottom: 50%;
+  transform: translateY(50%);
+  width: clamp(38px, 4.4vw, 84px);
+  height: auto;
+}
+
+.fase2__tempo-trilha {
+  width: 100%;
+  height: 100%;
+  background-color: #5A189A;
+  border: 2px solid #7B4FC0;
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.fase2__tempo-fill {
+  width: 0%;
+  height: 100%;
+  border-radius: 999px;
+  background-color: #FF3B2F;
+}
+
+/* ---------- Aviso (toast) ---------- */
+.fase2__aviso {
+  position: absolute;
+  left: 50%;
+  bottom: clamp(66px, 13vh, 150px);
+  transform: translateX(-50%);
+  max-width: min(80vw, 620px);
+
+  padding: clamp(8px, 1vw, 16px) clamp(14px, 1.8vw, 28px);
+  background-color: rgba(38, 0, 51, 0.92);
+  border: 2px solid #968DE0;
+  border-radius: 14px;
+
+  font-size: clamp(13px, 1.35vw, 24px);
+  line-height: 1.35;
+  color: #FEFEFE;
+  text-align: center;
+  z-index: 6;
+}
+
+.fase2__aviso[hidden] { display: none; }
+
+/* ---------- Overlay de fim de fase (reaproveita .regras) ---------- */
+#fase2-overlay,
+#fase2-overlay .regras__caixa {
+  animation: none;
+}
+
+.fase2__overlay-notas {
+  font-family: "Garet Heavy", sans-serif;
+  font-weight: 800;
+  color: #5A189A;
+}
+
+.fase2__overlay-notas[hidden] { display: none; }
+
+.fase2__overlay-acoes {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: clamp(10px, 1.4vw, 20px);
+  margin-top: clamp(16px, 2vw, 28px);
+}
+
+.fase2__overlay-acoes .btn {
+  width: auto;
+  aspect-ratio: auto;
+  padding: 0.5em 1.3em;
+  font-size: clamp(15px, 1.6vw, 26px);
+  white-space: nowrap;
+}
+
+/* ---------- Fase 2 em telas estreitas / retrato ----------
+   Mesma ideia da Fase 1: enunciado, planta e bandeja passam a fluir numa
+   coluna central rolável; cronômetro e botões ficam fixos nos cantos. */
+@media (max-aspect-ratio: 5/4), (max-width: 760px) {
+  .fase2 {
+    height: auto;
+    min-height: 100vh;
+    min-height: 100dvh;
+    overflow-x: hidden;
+    overflow-y: auto;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-bottom: clamp(88px, 16vh, 130px);
+  }
+
+  .fase2__desafio,
+  .fase2__bandeja {
+    position: static;
+    transform: none;
+  }
+
+  .fase2__desafio {
+    max-width: none;
+    margin: clamp(28px, 6vh, 56px) auto clamp(10px, 2vh, 20px);
+    padding-inline: clamp(16px, 5vw, 40px);
+    text-align: center;
+  }
+
+  .fase2__desafio strong { font-size: 1em; }
+
+  /* O tabuleiro continua sendo contexto de posicionamento das peças
+     encaixadas — fica `relative`, só volta ao fluxo da coluna. */
+  .fase2__tabuleiro {
+    position: relative;
+    left: auto;
+    top: auto;
+    transform: none;
+    width: clamp(200px, 66vw, 400px);
+    margin: clamp(6px, 2vh, 18px) auto clamp(16px, 4vh, 32px);
+  }
+
+  .fase2__bandeja {
+    justify-content: center;
+    gap: clamp(16px, 4vw, 40px) clamp(16px, 6vw, 48px);
+    margin-bottom: clamp(12px, 3vh, 28px);
+  }
+
+  .fase2__peca--vaso    { width: clamp(42px, 12vw, 96px); }
+  .fase2__peca--pia     { width: clamp(48px, 13vw, 108px); }
+  .fase2__peca--barra-h { width: clamp(78px, 22vw, 180px); }
+  .fase2__peca--barra-v { width: clamp(12px, 3.2vw, 26px); }
+
+  .fase2__girar {
+    right: clamp(12px, 4vw, 32px);
+    bottom: clamp(70px, 15vh, 150px);
+  }
+
+  .fase2__confirmar {
+    right: clamp(12px, 4vw, 32px);
+    bottom: clamp(12px, 3vh, 28px);
+  }
+
+  .fase2__menu {
+    right: clamp(12px, 4vw, 32px);
+    bottom: auto;
+    top: clamp(12px, 3vh, 24px);
+  }
+
+  .fase2__tempo {
+    left: clamp(58px, 18vw, 120px);
+    right: clamp(74px, 22vw, 130px);
+    bottom: clamp(14px, 3.4vh, 32px);
+  }
+
+  .fase2__aviso {
+    position: fixed;
+    bottom: clamp(96px, 20vh, 170px);
+  }
+}
+
+
 /* ---------- Fases em telas estreitas / retrato ---------- */
 @media (max-width: 640px), (max-height: 500px) {
   .fases__item {
