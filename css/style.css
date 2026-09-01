@@ -476,6 +476,427 @@ body {
   white-space: nowrap;
 }
 
+/* ==================================================================
+   Cenário — Fase 1 (quebra-cabeça de montagem)
+   Referência de medidas: mockups 1920×1080 (montado.png / desmontado.png).
+   Arrastar da bandeja: 2 vasos + 2 portas -> soltar dentro das cabines.
+   ================================================================== */
+.fase1 {
+  position: relative;
+  height: 100vh;
+  height: 100dvh;
+  width: 100%;
+  overflow: hidden;
+
+  background-image: url("../assets/img/fundo-padrao.png");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+
+  font-family: "Garet Book", sans-serif;
+  cursor: default;
+}
+
+.fase1[hidden],
+.cenario[hidden] {
+  display: none;
+}
+
+/* ---------- Enunciado (canto esquerdo) ---------- */
+.fase1__desafio {
+  position: absolute;
+  left: clamp(16px, 3.6vw, 70px);
+  top: 50%;
+  transform: translateY(-50%);
+  max-width: min(34vw, 470px);
+
+  font-size: clamp(13px, 1.66vw, 32px);
+  line-height: 1.4;
+  color: #FEFEFE;
+}
+
+.fase1__desafio strong {
+  display: block;
+  margin-bottom: 0.35em;
+  font-family: "Garet Heavy", sans-serif;
+  font-weight: 800;
+  color: #FF5031;
+  text-transform: uppercase;
+  font-size: 1.12em;
+}
+
+/* ---------- As duas cabines ---------- */
+.fase1__cabines {
+  position: absolute;
+  left: 48%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+
+  display: flex;
+  align-items: flex-start;
+  gap: clamp(10px, 3vw, 58px);
+}
+
+.fase1__cabine {
+  position: relative;
+  overflow: visible;
+  width: clamp(112px, 13.7vw, 263px);
+  border-radius: 6px;
+  transition: box-shadow 0.15s ease;
+}
+
+.fase1__cabine.is-errada {
+  box-shadow: 0 0 0 4px #FF3B2F, 0 0 24px 4px rgba(255, 59, 47, 0.6);
+}
+
+.fase1__planta {
+  display: block;
+  width: 100%;
+  height: auto;
+  user-select: none;
+  -webkit-user-drag: none;
+  pointer-events: none;
+}
+
+/* ---------- Bandeja (peças na direita) ----------
+   Duas colunas, como no mockup: portas à esquerda, vasos à direita. */
+.fase1__bandeja {
+  position: absolute;
+  right: clamp(12px, 7vw, 140px);
+  top: clamp(16px, 13vh, 150px);
+
+  display: flex;
+  align-items: flex-start;
+  gap: clamp(10px, 2vw, 40px);
+}
+
+.fase1__bandeja-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(12px, 3.4vh, 40px);
+}
+
+/* ---------- Peças arrastáveis ---------- */
+.fase1__peca {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(2px, 0.5vh, 6px);
+
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+  z-index: 4;
+}
+
+.fase1__peca img {
+  display: block;
+  width: 100%;
+  height: auto;
+  -webkit-user-drag: none;
+  user-select: none;
+  pointer-events: none;
+}
+
+.fase1__peca--porta { width: clamp(54px, 7.4vw, 150px); }
+.fase1__peca--vaso { width: clamp(38px, 4.6vw, 90px); }
+
+.fase1__peca-legenda {
+  font-family: "Garet Book", sans-serif;
+  font-size: clamp(9px, 0.95vw, 16px);
+  color: #FEFEFE;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.fase1__peca.is-arrastando {
+  cursor: grabbing;
+  z-index: 999;
+  filter: drop-shadow(0 10px 16px rgba(0, 0, 0, 0.45));
+}
+
+.fase1__peca.is-arrastando .fase1__peca-legenda,
+.fase1__peca.is-colocada .fase1__peca-legenda {
+  display: none;
+}
+
+/* Peça já colocada dentro de uma cabine: posicionada em relação à cabine. */
+.fase1__cabine .fase1__peca.is-colocada {
+  position: absolute;
+  z-index: 3;
+}
+
+.fase1__cabine .fase1__peca--vaso.is-colocada {
+  width: 46%;
+  left: 50%;
+  transform: translateX(-50%);
+}
+.fase1__cabine .fase1__peca--vaso.is-vaso-topo { top: 6%; }
+.fase1__cabine .fase1__peca--vaso.is-vaso-porta { bottom: 8%; top: auto; }
+
+/* A porta encaixa no canto inferior esquerdo (dobradiça na parede). A que
+   "abre para dentro" fica dentro da cabine; a que "abre para fora" projeta
+   para baixo, fora dela (por isso .fase1__cabine tem overflow visível). */
+.fase1__cabine .fase1__peca--porta.is-colocada {
+  width: 84%;
+  left: 4%;
+  transform: none;
+}
+.fase1__cabine .fase1__peca--porta[data-abertura="dentro"].is-colocada {
+  bottom: 3%;
+  top: auto;
+}
+.fase1__cabine .fase1__peca--porta[data-abertura="fora"].is-colocada {
+  top: calc(100% - 9%);
+  bottom: auto;
+}
+
+/* ---------- Botão confirmar (✓) ---------- */
+.fase1__confirmar {
+  position: absolute;
+  right: clamp(14px, 5.4vw, 104px);
+  bottom: clamp(84px, 17.5vh, 200px);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: clamp(52px, 6.4vw, 122px);
+  height: clamp(52px, 6.4vw, 122px);
+  padding: 0;
+
+  background-color: #1FA6E8;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  z-index: 5;
+
+  box-shadow:
+    inset 0 3px 0 0 rgba(255, 255, 255, 0.35),
+    6px 6px 0 0 rgba(150, 200, 240, 0.55),
+    0 6px 14px 0 rgba(38, 0, 51, 0.45);
+  transition: translate 0.12s ease, box-shadow 0.12s ease;
+}
+
+.fase1__confirmar svg {
+  display: block;
+  width: 56%;
+  height: 56%;
+}
+
+.fase1__confirmar:hover { background-color: #159AD9; }
+
+.fase1__confirmar:active {
+  translate: 3px 3px;
+  box-shadow:
+    inset 0 2px 0 0 rgba(255, 255, 255, 0.35),
+    2px 2px 0 0 rgba(150, 200, 240, 0.55),
+    0 3px 7px 0 rgba(38, 0, 51, 0.45);
+}
+
+.fase1__confirmar:focus-visible {
+  outline: 3px solid #FEFEFE;
+  outline-offset: 3px;
+}
+
+/* ---------- Botão menu (volta às fases) ---------- */
+.fase1__menu {
+  position: absolute;
+  right: clamp(16px, 5.8vw, 112px);
+  bottom: clamp(18px, 4.6vh, 56px);
+
+  width: clamp(40px, 4.9vw, 94px);
+  display: block;
+  border-radius: 50%;
+  z-index: 5;
+  transition: translate 0.12s ease;
+}
+
+.fase1__menu img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.fase1__menu:active { translate: 0 3px; }
+
+.fase1__menu:focus-visible {
+  outline: 3px solid #FEFEFE;
+  outline-offset: 3px;
+}
+
+/* ---------- Cronômetro ---------- */
+.fase1__tempo {
+  position: absolute;
+  left: clamp(64px, 17vw, 328px);
+  right: clamp(190px, 32vw, 610px);
+  bottom: clamp(16px, 4.6vh, 56px);
+  height: clamp(12px, 1.9vh, 24px);
+}
+
+.fase1__relogio {
+  position: absolute;
+  right: calc(100% + clamp(6px, 0.8vw, 16px));
+  bottom: 50%;
+  transform: translateY(50%);
+  width: clamp(38px, 4.4vw, 84px);
+  height: auto;
+}
+
+.fase1__tempo-trilha {
+  width: 100%;
+  height: 100%;
+  background-color: #5A189A;
+  border: 2px solid #7B4FC0;
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.fase1__tempo-fill {
+  width: 0%;
+  height: 100%;
+  border-radius: 999px;
+  background-color: #FF3B2F;
+}
+
+/* ---------- Aviso (toast) ---------- */
+.fase1__aviso {
+  position: absolute;
+  left: 50%;
+  bottom: clamp(66px, 13vh, 150px);
+  transform: translateX(-50%);
+  max-width: min(80vw, 620px);
+
+  padding: clamp(8px, 1vw, 16px) clamp(14px, 1.8vw, 28px);
+  background-color: rgba(38, 0, 51, 0.92);
+  border: 2px solid #968DE0;
+  border-radius: 14px;
+
+  font-size: clamp(13px, 1.35vw, 24px);
+  line-height: 1.35;
+  color: #FEFEFE;
+  text-align: center;
+  z-index: 6;
+}
+
+.fase1__aviso[hidden] { display: none; }
+
+/* ---------- Overlay de fim de fase ----------
+   Reaproveita .regras / .regras__caixa, mas sem a animação de entrada
+   (que pode deixar o painel preso em opacity 0 em alguns navegadores). */
+#fase1-overlay,
+#fase1-overlay .regras__caixa {
+  animation: none;
+}
+
+.fase1__overlay-notas {
+  font-family: "Garet Heavy", sans-serif;
+  font-weight: 800;
+  color: #5A189A;
+}
+
+.fase1__overlay-notas[hidden] { display: none; }
+
+.fase1__overlay-acoes {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: clamp(10px, 1.4vw, 20px);
+  margin-top: clamp(16px, 2vw, 28px);
+}
+
+.fase1__overlay-acoes .btn {
+  width: auto;
+  aspect-ratio: auto;
+  padding: 0.5em 1.3em;
+  font-size: clamp(15px, 1.6vw, 26px);
+  white-space: nowrap;
+}
+
+/* ---------- Fase 1 em telas estreitas / retrato ----------
+   O jogo é calibrado para paisagem (como o resto do projeto). Em telas
+   estreitas o enunciado, as cabines e a bandeja passam a fluir numa
+   coluna central rolável; só o cronômetro e os dois botões ficam fixos
+   nos cantos de baixo. */
+@media (max-aspect-ratio: 5/4), (max-width: 760px) {
+  .fase1 {
+    height: auto;
+    min-height: 100vh;
+    min-height: 100dvh;
+    overflow-x: hidden;
+    overflow-y: auto;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-bottom: clamp(88px, 16vh, 130px); /* espaço pros botões fixos */
+  }
+
+  .fase1__desafio,
+  .fase1__cabines,
+  .fase1__bandeja {
+    position: static;
+    transform: none;
+  }
+
+  .fase1__desafio {
+    max-width: none;
+    margin: clamp(28px, 6vh, 56px) auto clamp(10px, 2vh, 20px);
+    padding-inline: clamp(16px, 5vw, 40px);
+    text-align: center;
+  }
+
+  .fase1__desafio strong { font-size: 1em; }
+
+  .fase1__cabines {
+    justify-content: center;
+    margin: clamp(6px, 2vh, 18px) auto clamp(16px, 4vh, 32px);
+  }
+
+  .fase1__cabine { width: clamp(74px, 22vw, 150px); }
+
+  .fase1__bandeja {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: clamp(10px, 4vw, 28px);
+    margin-bottom: clamp(12px, 3vh, 28px);
+  }
+
+  .fase1__bandeja-col {
+    flex-direction: row;
+    gap: clamp(10px, 4vw, 28px);
+  }
+
+  .fase1__peca--porta { width: clamp(52px, 15vw, 96px); }
+  .fase1__peca--vaso { width: clamp(34px, 9vw, 58px); }
+
+  .fase1__confirmar {
+    right: clamp(12px, 4vw, 32px);
+    bottom: clamp(12px, 3vh, 28px);
+  }
+
+  .fase1__menu {
+    right: clamp(12px, 4vw, 32px);
+    bottom: auto;
+    top: clamp(12px, 3vh, 24px);
+  }
+
+  .fase1__tempo {
+    left: clamp(58px, 18vw, 120px);
+    right: clamp(74px, 22vw, 130px);
+    bottom: clamp(14px, 3.4vh, 32px);
+  }
+
+  .fase1__aviso {
+    position: fixed;
+    bottom: clamp(96px, 20vh, 170px);
+  }
+}
+
 
 /* ---------- Fases em telas estreitas / retrato ---------- */
 @media (max-width: 640px), (max-height: 500px) {

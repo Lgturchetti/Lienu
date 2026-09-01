@@ -8,14 +8,105 @@
 </head>
 <body>
 
-  <a href="fases.html" class="voltar" aria-label="Voltar">
-    <span class="voltar__seta" aria-hidden="true">&larr;</span> Voltar
-  </a>
+  <!-- ================= Fase 1 do modo Cenário =================
+       Só aparece com ?nivel=1 (js/cenario.js). Quebra-cabeça de montagem:
+       arrastar da bandeja os 2 vasos e as 2 portas para dentro das cabines
+       e confirmar no botão. Resposta certa (norma dos 60 cm de manobra):
+       cabine profunda -> porta abre para dentro; cabine rasa -> porta abre
+       para fora; vaso sempre encostado na parede do fundo. -->
+  <main class="fase1" id="fase1" hidden>
 
-  <!-- Placeholder do modo Cenário. O nível escolhido chega pela query
-       (?nivel=1). O jogo em si ainda não foi implementado — quando for,
-       basta substituir o conteúdo de .cenario__group. -->
-  <main class="cenario" id="cenario">
+    <p class="fase1__desafio">
+      <strong>Desafio:</strong> tendo duas plantas de cabine sanitária, com
+      profundidades distintas, configure a posição mais adequada para os
+      vasos sanitários e o tipo de abertura das portas.
+    </p>
+
+    <div class="fase1__cabines">
+      <div class="fase1__cabine fase1__cabine--maior" data-cabine="maior">
+        <img class="fase1__planta" src="assets/img/planta-maior.png"
+             alt="Planta da cabine mais profunda" draggable="false">
+      </div>
+      <div class="fase1__cabine fase1__cabine--menor" data-cabine="menor">
+        <img class="fase1__planta" src="assets/img/planta-menor.png"
+             alt="Planta da cabine mais rasa" draggable="false">
+      </div>
+    </div>
+
+    <div class="fase1__bandeja" id="fase1-bandeja" aria-label="Peças para montar">
+      <div class="fase1__bandeja-col">
+        <div class="fase1__peca fase1__peca--porta" data-tipo="porta" data-abertura="fora">
+          <img src="assets/img/porta-fora.png" alt="Porta que abre para fora" draggable="false">
+          <span class="fase1__peca-legenda">Abre p/ fora</span>
+        </div>
+        <div class="fase1__peca fase1__peca--porta" data-tipo="porta" data-abertura="dentro">
+          <img src="assets/img/porta-dentro.png" alt="Porta que abre para dentro" draggable="false">
+          <span class="fase1__peca-legenda">Abre p/ dentro</span>
+        </div>
+      </div>
+      <div class="fase1__bandeja-col">
+        <div class="fase1__peca fase1__peca--vaso" data-tipo="vaso">
+          <img src="assets/img/vaso.png" alt="Vaso sanitário" draggable="false">
+        </div>
+        <div class="fase1__peca fase1__peca--vaso" data-tipo="vaso">
+          <img src="assets/img/vaso.png" alt="Vaso sanitário" draggable="false">
+        </div>
+      </div>
+    </div>
+
+    <button type="button" class="fase1__confirmar" id="fase1-confirmar" aria-label="Confirmar montagem">
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M20 6L9 17l-5-5" fill="none" stroke="#FFFFFF" stroke-width="3.4"
+              stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+
+    <a href="fases.html" class="fase1__menu" aria-label="Voltar para a escolha de fases">
+      <img src="assets/img/menu-lista.png" alt="" draggable="false">
+    </a>
+
+    <div class="fase1__tempo" aria-hidden="true">
+      <svg class="fase1__relogio" viewBox="0 0 64 66">
+        <circle cx="15" cy="13" r="8" fill="#6A3FB0"/>
+        <circle cx="49" cy="13" r="8" fill="#6A3FB0"/>
+        <rect x="29" y="2" width="6" height="8" rx="3" fill="#6A3FB0"/>
+        <circle cx="32" cy="37" r="23" fill="#8A63D2" stroke="#4B1E86" stroke-width="3"/>
+        <circle cx="32" cy="37" r="16" fill="#D3C1F0"/>
+        <line x1="32" y1="37" x2="32" y2="25" stroke="#3A1568" stroke-width="3" stroke-linecap="round"/>
+        <line x1="32" y1="37" x2="41" y2="41" stroke="#3A1568" stroke-width="3" stroke-linecap="round"/>
+        <circle cx="32" cy="37" r="2.6" fill="#3A1568"/>
+        <line x1="16" y1="57" x2="10" y2="64" stroke="#6A3FB0" stroke-width="5" stroke-linecap="round"/>
+        <line x1="48" y1="57" x2="54" y2="64" stroke="#6A3FB0" stroke-width="5" stroke-linecap="round"/>
+      </svg>
+      <div class="fase1__tempo-trilha">
+        <div class="fase1__tempo-fill" id="fase1-tempo-fill"></div>
+      </div>
+    </div>
+
+    <p class="fase1__aviso" id="fase1-aviso" role="status" hidden></p>
+
+    <!-- Overlay de fim de fase: sucesso (mostra a norma) ou tempo esgotado.
+         Reaproveita o visual dos pop-ups do menu (.regras / .regras__caixa). -->
+    <div class="regras" id="fase1-overlay" hidden>
+      <div class="regras__caixa" role="dialog" aria-modal="true" aria-labelledby="fase1-overlay-titulo">
+        <h1 class="regras__titulo" id="fase1-overlay-titulo">Compreenda as normas</h1>
+        <p class="regras__texto" id="fase1-overlay-texto"></p>
+        <p class="regras__texto fase1__overlay-notas" id="fase1-overlay-notas" hidden></p>
+        <div class="fase1__overlay-acoes">
+          <button type="button" class="btn" id="fase1-rejogar">Jogar de novo</button>
+          <a href="fases.html" class="btn btn--primary">Voltar às fases</a>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- ================= Placeholder (Nível 2 e 3) ================= -->
+  <main class="cenario" id="cenario-placeholder" hidden>
+    <a href="fases.html" class="voltar" aria-label="Voltar">
+      <span class="voltar__seta" aria-hidden="true">&larr;</span> Voltar
+    </a>
+
     <div class="cenario__spacer cenario__spacer--top" aria-hidden="true"></div>
 
     <div class="cenario__group">
@@ -27,6 +118,7 @@
     <div class="cenario__spacer cenario__spacer--bottom" aria-hidden="true"></div>
   </main>
 
+  <script src="js/progresso-cenario.js"></script>
   <script src="js/cenario.js"></script>
 
 </body>
